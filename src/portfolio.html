@@ -1,0 +1,189 @@
+<main id="main" tabindex="-1">
+  @switch (page()) {
+    @case ('home') {
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="site-wrap hero-layout">
+          <div class="hero-text">
+            <p class="eyebrow">{{ profile.title }} <span aria-hidden="true">·</span> {{ profile.location }}</p>
+            <h1 id="hero-title">Anupam<br>Rawat<span class="name-period">.</span></h1>
+            <p class="hero-lead">I build software for complex, everyday workflows.</p>
+            <p class="hero-summary">My work spans enterprise web apps, real-time AI interfaces, and serverless features.</p>
+            <div class="hero-actions">
+              <a class="site-button button-filled" routerLink="/" fragment="work">Explore my work</a>
+              <a class="site-button button-ghost" routerLink="/workbench">Try the Angular demo</a>
+            </div>
+          </div>
+          <figure class="portrait">
+            <div class="portrait-frame">
+              <img src="portrait.webp" width="480" height="480" alt="Anupam Rawat" fetchpriority="high">
+            </div>
+          </figure>
+        </div>
+      </section>
+
+      <section id="work" class="site-wrap section-block" aria-labelledby="selected-heading">
+        <span class="section-rule" aria-hidden="true"></span>
+        <div class="section-heading">
+          <h2 id="selected-heading">Selected work</h2>
+          <a class="text-link" routerLink="/work">View all projects</a>
+        </div>
+        <div class="featured-projects">
+          @for (project of featured; track project.slug) {
+            <article class="project-card" [class.has-visual]="project.visual" [class.demo-feature]="project.demo && project.visual">
+              @if (project.visual) {
+                <div class="card-media">
+                  <app-project-visual [project]="project" />
+                </div>
+              }
+              <div class="card-copy">
+                <p class="eyebrow">{{ project.kind }} <span>·</span> {{ project.domain }}</p>
+                <h3>{{ project.title }}</h3>
+                <p>{{ project.summary }}</p>
+                <p class="featured-stack">{{ project.stack.join(' · ') }}</p>
+                <div class="hero-actions">
+                  @if (project.demo; as demo) {
+                    <a class="site-button button-filled" [routerLink]="demo.route">Open Angular demo</a>
+                  }
+                  <a class="text-link" [routerLink]="['/work', project.slug]" [attr.aria-label]="'Read case study: ' + project.title">Read case study</a>
+                </div>
+              </div>
+            </article>
+          }
+        </div>
+      </section>
+
+      <section id="experience" class="section-block experience-section" aria-labelledby="experience-heading">
+        <div class="site-wrap experience-grid">
+          <div class="experience-heading">
+            <p class="eyebrow">Experience</p>
+            <h2 id="experience-heading">{{ profile.employer }}</h2>
+            <p>{{ profile.title }} <br>{{ profile.employmentStart }} – Present</p>
+            <p class="about-summary">I started with Angular during probation and went on to build recruitment, compliance, and inventory applications. My recent work brings real-time assistant responses into telecom diagnostics workflows.</p>
+            <p class="timeline-note">{{ overlap }}</p>
+          </div>
+          <ol class="timeline">
+            @for (entry of timeline; track entry.title) {
+              <li>
+                <p class="eyebrow">{{ entry.period }}</p>
+                <h3>
+                  @if (entry.slug) { <a [routerLink]="['/work', entry.slug]">{{ entry.title }}</a> }
+                  @else { {{ entry.title }} }
+                </h3>
+                <p>{{ entry.summary }}</p>
+              </li>
+            }
+          </ol>
+        </div>
+      </section>
+
+      <section class="site-wrap section-block engineering-section" aria-labelledby="capabilities-heading">
+        <div class="engineering-heading">
+          <span class="section-rule" aria-hidden="true"></span>
+          <h2 id="capabilities-heading">How I engineer</h2>
+        </div>
+        <div class="capabilities">
+          @for (capability of capabilities; track capability.title; let first = $first) {
+            <details name="engineering-capabilities" [open]="first">
+              <summary>
+                <span>{{ capability.title }}</span>
+                <span class="disclosure-icon" aria-hidden="true"></span>
+              </summary>
+              <div class="capability-copy">
+                <p>{{ capability.decision }}</p>
+                <p class="capability-stack">{{ capability.technologies }}</p>
+                <a class="text-link" [routerLink]="['/work', capability.project]">{{ capability.example }}</a>
+              </div>
+            </details>
+          }
+        </div>
+      </section>
+
+      <section id="contact" class="contact-section" aria-labelledby="contact-heading">
+        <div class="site-wrap contact-inner">
+          <div>
+            <h2 id="contact-heading">Let’s connect.</h2>
+            <p>Reach out about frontend engineering roles, enterprise apps, or the Angular demo.</p>
+          </div>
+          <div class="hero-actions">
+            <a class="site-button button-filled" [href]="profile.linkedin">Connect on LinkedIn</a>
+            @if (profile.resume) { <a class="site-button button-ghost" [href]="profile.resume">View résumé</a> }
+          </div>
+        </div>
+      </section>
+    }
+    @case ('work') {
+      <section class="site-wrap inner-page" aria-labelledby="work-title">
+        <div class="page-heading">
+          <h1 id="work-title">Work</h1>
+          <p>Enterprise applications I’ve contributed to and an Angular project you can try.</p>
+        </div>
+        <div class="work-index">
+          @for (project of projects; track project.slug) {
+            <article class="index-card" [class.has-visual]="project.visual">
+              @if (project.visual) {
+                <a class="index-media" [routerLink]="['/work', project.slug]" [attr.aria-label]="'View ' + project.title">
+                  <app-project-visual [project]="project" />
+                </a>
+              }
+              <div class="index-copy">
+                <p class="eyebrow">{{ project.kind }} <span>·</span> {{ project.domain }}</p>
+                <h2><a [routerLink]="['/work', project.slug]">{{ project.title }}</a></h2>
+                <p>{{ project.summary }}</p>
+              </div>
+            </article>
+          }
+        </div>
+      </section>
+    }
+    @case ('project') {
+      @if (project(); as study) {
+        <article class="site-wrap inner-page case-study">
+          <a class="text-link" routerLink="/work">All projects</a>
+          <div class="page-heading">
+            <p class="eyebrow">{{ study.kind }} <span>·</span> {{ study.domain }}</p>
+            <h1>{{ study.title }}</h1>
+            <p>{{ study.summary }}</p>
+            @if (study.demo || study.source) {
+              <div class="hero-actions">
+                @if (study.demo) { <a class="site-button button-filled" [routerLink]="study.demo.route">{{ study.demo.label }}</a> }
+                @if (study.source) { <a class="site-button button-ghost" [href]="study.source">View source</a> }
+              </div>
+            }
+          </div>
+          @if (study.visual) {
+            <div class="case-visual">
+              <app-project-visual [project]="study" />
+            </div>
+          }
+          <div class="case-grid">
+            <aside class="study-meta" aria-label="Project details">
+              <dl>
+                <dt>Role</dt><dd>{{ study.role }}</dd>
+                <dt>Period</dt><dd>{{ study.period }}</dd>
+                <dt>Technology</dt><dd>{{ study.stack.join(', ') }}</dd>
+              </dl>
+            </aside>
+            <div class="case-copy">
+              <section><h2>The problem</h2><p>{{ study.problem }}</p></section>
+              <section><h2>My contribution</h2><p>{{ study.contribution }}</p></section>
+              <section>
+                <h2>Technical decisions</h2>
+                @for (decision of study.decisions; track decision.title) {
+                  <div class="decision"><h3>{{ decision.title }}</h3><p>{{ decision.description }}</p></div>
+                }
+              </section>
+              <section><h2>Project evidence</h2><p>{{ study.evidence }}</p></section>
+            </div>
+          </div>
+        </article>
+      } @else {
+        <section class="site-wrap inner-page">
+          <div class="page-heading">
+            <h1>Project not found</h1>
+            <p><a class="text-link" routerLink="/work">Browse all projects</a></p>
+          </div>
+        </section>
+      }
+    }
+  }
+</main>
