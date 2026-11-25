@@ -104,10 +104,25 @@
             <h2 id="contact-heading">Let’s connect.</h2>
             <p>Reach out about frontend engineering roles, enterprise apps, or the Angular demo.</p>
           </div>
-          <div class="hero-actions">
-            <a class="site-button button-filled" [href]="profile.linkedin">Connect on LinkedIn</a>
-            @if (profile.resume) { <a class="site-button button-ghost" [href]="profile.resume">View résumé</a> }
-          </div>
+            <div class="contact-details">
+                @for (email of profile.emails; track email) {
+                  <a class="contact-link" [href]="'mailto:' + email" [attr.aria-label]="'Email ' + email">
+                    <span class="contact-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 6 9 7 9-7"/></svg></span>
+                    <span>{{ email }}</span>
+                  </a>
+                }
+                @for (phone of profile.phones; track phone.href) {
+                  <a class="contact-link" [href]="phone.href" [attr.aria-label]="'Call ' + phone.label">
+                    <span class="contact-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16.9v3a2 2 0 0 1-2.2 2A19.8 19.8 0 0 1 3.1 6.2 2 2 0 0 1 5.1 4h3a1 1 0 0 1 1 .9l.5 3a1 1 0 0 1-.3.9L7.8 10a16 16 0 0 0 6.2 6.2l1.2-1.5a1 1 0 0 1 .9-.3l3 .5a1 1 0 0 1 .9 1Z"/></svg></span>
+                    <span>{{ phone.label }}</span>
+                  </a>
+                }
+                <a class="contact-link" [href]="profile.linkedin">
+                  <span class="contact-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M5.37 24H.39V7.98h4.98ZM2.88 5.8A2.89 2.89 0 1 1 2.9.02a2.89 2.89 0 0 1-.02 5.78ZM24 24h-4.97v-7.8c0-1.86-.04-4.25-2.59-4.25-2.59 0-2.99 2.02-2.99 4.12V24H8.48V7.98h4.77v2.19h.07c.67-1.26 2.29-2.59 4.71-2.59 5.04 0 5.97 3.32 5.97 7.63Z"/></svg></span>
+                  <span>Connect on LinkedIn</span>
+                </a>
+                @if (profile.resume) { <a class="text-link" [href]="profile.resume">View résumé</a> }
+            </div>
         </div>
       </section>
     }

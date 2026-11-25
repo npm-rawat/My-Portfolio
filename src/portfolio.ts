@@ -26,12 +26,8 @@ type NavSection = 'home' | 'work' | 'experience' | 'contact';
       <router-outlet />
       <footer class="site-footer">
         <div class="site-wrap footer-inner">
-          <a routerLink="/" class="footer-name">{{ profile.name }}</a>
-          <div>
-            @if (profile.github) { <a [href]="profile.github">GitHub</a> }
-            @if (profile.resume) { <a [href]="profile.resume">Résumé</a> }
-            <a [href]="profile.linkedin">LinkedIn</a>
-          </div>
+          <p class="footer-credit">© {{ year }} {{ profile.name }}</p>
+          <a class="footer-top" [routerLink]="[]" fragment="main">Back to top <span aria-hidden="true">↑</span></a>
         </div>
       </footer>
     </div>
@@ -42,6 +38,7 @@ type NavSection = 'home' | 'work' | 'experience' | 'contact';
 })
 export class Portfolio {
   readonly profile = profile;
+  readonly year = new Date().getFullYear();
   private readonly router = inject(Router);
   private readonly document = inject(DOCUMENT);
   private readonly nav = viewChild<ElementRef<HTMLElement>>('mainNav');

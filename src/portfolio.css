@@ -282,11 +282,20 @@ details[open] .disclosure-icon::after { display: none; }
 .capability-copy { max-width: 58ch; padding: 0 4px 20px; color: var(--site-muted); }
 .capability-stack { margin-block: 11px; font-size: .9rem; }
 .contact-section { padding-block: 66px 73px; border-block: 1px solid var(--site-line); }
-.contact-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 18px; }
+.contact-inner { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: clamp(25px, 7vw, 100px); align-items: start; }
 .contact-inner p { color: var(--site-muted); margin-top: 13px; }
 .contact-inner .hero-actions { margin: 0; }
-.footer-inner { display: flex; justify-content: space-between; gap: 18px; padding-block: 22px; }
-.footer-inner .footer-name { color: var(--site-ink); }
+.contact-details { display: grid; justify-items: start; gap: 18px; padding-top: 6px; }
+.contact-link { display: inline-flex; align-items: center; gap: 16px; min-height: 48px; max-width: 100%; color: var(--site-ink); text-decoration: none; font-weight: 500; }
+.contact-link > span:last-child { min-width: 0; overflow-wrap: anywhere; }
+.contact-icon { display: grid; place-items: center; flex: 0 0 44px; width: 44px; height: 44px; border-radius: 50%; background: #e9eddf; transition: background .18s ease; }
+.contact-icon svg { width: 20px; height: 20px; }
+.contact-link:hover .contact-icon, .contact-link:focus-visible .contact-icon { background: #d9f779; }
+.contact-link:hover > span:last-child { text-decoration: underline; text-underline-offset: 4px; }
+.footer-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 18px; padding-block: 24px; }
+.footer-credit { margin: 0; color: var(--site-muted); font-size: .85rem; }
+.footer-top { display: inline-flex; align-items: center; gap: 10px; }
+.footer-top span { font-size: 1.1rem; }
 
 .inner-page { min-height: calc(100vh - 150px); padding-block: 53px 85px; }
 .page-heading { margin-bottom: 31px; }
@@ -342,7 +351,7 @@ details[open] .disclosure-icon::after { display: none; }
   .project-card.has-visual:nth-child(even):not(.demo-feature) .card-media, .project-card.has-visual:nth-child(even):not(.demo-feature) .card-copy { grid-area: auto; }
   .featured-projects .demo-feature { grid-template-columns: 1fr; }
   .featured-projects .demo-feature .card-media, .featured-projects .demo-feature .card-copy { grid-area: auto; }
-  .experience-grid, .engineering-section { grid-template-columns: 1fr; }
+  .experience-grid, .engineering-section, .contact-inner { grid-template-columns: 1fr; }
   .engineering-heading h2 { max-width: none; }
 }
 @media (max-width: 550px) {

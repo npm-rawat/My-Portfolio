@@ -30,6 +30,8 @@ interface Profile {
   readonly employer: string;
   readonly employmentStart: string;
   readonly linkedin: string;
+  readonly emails: readonly string[];
+  readonly phones: readonly { readonly label: string; readonly href: string }[];
   readonly github?: string;
   readonly resume?: string;
 }
@@ -41,6 +43,10 @@ export const profile: Profile = {
   employer: 'Ksolves India Limited',
   employmentStart: 'May 2022',
   linkedin: 'https://www.linkedin.com/in/npm-rawat/',
+  emails: ['npmrawat.048@gmail.com'],
+  phones: [
+    { label: '+91 9105567872', href: 'tel:+919105567872' },
+  ],
 };
 
 export const projects: readonly Project[] = [
