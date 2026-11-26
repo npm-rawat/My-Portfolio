@@ -1,5 +1,6 @@
-name: Test and deploy portfolio
+name: Deploy portfolio
 
+# Static site: no build step. Copies the site files into _site and publishes them to GitHub Pages.
 on:
   push:
     branches: [main]
@@ -19,18 +20,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - uses: actions/setup-node@v5
-        with:
-          node-version: '24'
-          cache: npm
-      - run: npm ci
-      - run: npx playwright install --with-deps chromium
-      - run: npm test
-      - run: npm run build -- --base-href ./
+      - name: Collect site files
+        run: |
+          mkdir _site
+          cp -r index.html assets .nojekyll _site/
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v4
         with:
-          path: dist/stock-count-workbench/browser
+          path: _site
   deploy:
     needs: build
     runs-on: ubuntu-latest

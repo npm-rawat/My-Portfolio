@@ -1,80 +1,75 @@
-# Anupam Rawat’s developer portfolio
+# Anupam Rawat · Full-Stack Developer Portfolio
 
-A personal Angular portfolio project by Anupam Rawat. The application pairs an engineering portfolio with a working warehouse cycle-count demo built with synthetic inventory data.
+A static, single-page portfolio (HTML + CSS + vanilla JS). There's no build step and no `npm install`, so it runs directly on GitHub Pages.
 
-![Stock table, count form, and activity feed](public/workbench-preview.webp)
+## Folder structure
 
-## Run locally
-
-Use Node.js 24.15+ in the 24.x series and npm.
-
-```sh
-npm ci
-npm start
+```
+Portfolio/
+├── index.html              ← page layout and sections
+├── .nojekyll               ← tells GitHub Pages to serve files as they are
+├── assets/
+│   ├── css/style.css       ← all styling (colors at the top under :root)
+│   ├── js/main.js          ← content data, animations, contact form
+│   ├── img/                ← portrait, project screenshot, favicon
+│   └── Anupam_Rawat_Resume.pdf   ← résumé download button
 ```
 
-Open `http://127.0.0.1:4200/` for the portfolio and `/#/workbench` for the demo.
+## Preview locally
 
-## Demo walkthrough
+Double-click `index.html`, or run a small server from this folder:
 
-1. Search by SKU or filter by bin. The seeded session starts with two items counted and one discrepancy.
-2. Select **Shielded sensor cable**. Enter **31** against the expected **35** and try to save. The form requires a variance reason. Enter a reason and save again.
-3. Count the remaining items and submit the session. Return it for recount or approve it. Approval locks editing and is recorded in Activity.
-4. Export a CSV and reload the page to see browser-local persistence. Use **Reset demo** to restore the sample.
-
-## Architecture
-
-- Angular standalone routes keep the portfolio and workbench in separate lazy-loaded components.
-- Typed reactive forms manage count entry. The inventory store independently enforces count bounds, required variance reasons and legal status transitions.
-- Signals derive pending counts, discrepancies and filtered rows from a single session state. Local storage stores the sample session and its timestamped activity.
-- A Playwright suite exercises validation, filtering, submit/review/approval, CSV export, persistence and narrow-screen navigation.
-
-The demo uses one browser profile and a single simulated warehouse session. In a production design, a backend would own inventory data, access control, concurrent updates and the audit trail.
-
-## Update the portfolio
-
-Edit [portfolio content](src/portfolio-content.ts) to update the profile, capabilities, and employment timeline. Add public GitHub or résumé URLs to the optional profile fields when available.
-
-Add one object to the `projects` array to publish a case study. For example:
-
-```ts
-{
-  slug: 'release-checklist',
-  title: 'Release Checklist',
-  summary: 'A workspace for tracking release readiness.',
-  role: 'Personal project · Frontend development',
-  period: '2026',
-  domain: 'Developer tools',
-  stack: ['Angular', 'TypeScript'],
-  kind: 'Personal project',
-  problem: 'Release tasks were scattered across several checklists.',
-  contribution: 'I built a shared view of the release tasks and their status.',
-  decisions: [
-    { title: 'Separate tasks from releases', description: 'Reusable task templates can seed each release.' },
-  ],
-  evidence: 'A public case study can include annotated screenshots or a demo.',
-}
+```powershell
+npx serve .
 ```
 
-Use a unique lowercase slug with hyphens. The record appears in `/#/work` and at `/#/work/release-checklist` automatically. Set `featured: true` to show it on the home page in array order. For an image, put it in `public/` and set `visual` to `{ kind: 'image', src: 'release-checklist.webp', alt: '…', width: 1200, height: 800 }` using its actual dimensions. Use a relative asset path so GitHub Pages can serve it from a repository subdirectory. An optional `demo` takes an internal Angular route and button label. An optional `source` takes a public repository URL. To reference the project in the employment timeline, add its slug to `experience`.
+## Publish on GitHub Pages
 
-Update the `capabilities` records to change the How I engineer panels. Each record connects a technical decision to a case-study slug. The portfolio uses native scrolling.
+This repo deploys with GitHub Actions (`.github/workflows/pages.yml`). Every push to `main` copies `index.html`, `assets/` and `.nojekyll` into a `_site` folder and publishes it. There's no build step.
 
-For new sections such as technical notes, add a lazy child route under the portfolio shell in [main.ts](src/main.ts) and a router link in the header in [portfolio.ts](src/portfolio.ts). Keep notes in their own typed content module and use the shell’s typography and layout classes.
+1. Commit and push to `main`:
+   ```powershell
+   git add -A
+   git commit -m "Update portfolio"
+   git push
+   ```
+2. Check that **Settings → Pages → Build and deployment → Source** is set to **GitHub Actions**.
+3. Watch the run under the repo's **Actions** tab. When it finishes, the site is live at `https://npm-rawat.github.io/My-Portfolio/`.
 
-## Test and build
+## Contact form delivery
 
-```sh
-npx playwright install chromium
-npm test
-npm run build -- --base-href ./
-```
+**Configured:** submissions go to Formspree form `xppdnkpa` (free plan, 50 submissions a month) and are emailed to the address on that Formspree account. To change it, edit `FORM_ENDPOINT` in `assets/js/main.js`. Set it back to `""` to fall back to opening the visitor's email app.
 
-When testing on a machine with Chrome already installed, set `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` to its absolute executable path to reuse it.
+### Setting it up from scratch
 
-## Publish with GitHub Pages
+GitHub Pages can't run a server, so the form needs a free form service.
 
-1. Create a GitHub repository named `stock-count-workbench` and push this directory to its `main` branch.
-2. Set **Settings → Pages → Source** to **GitHub Actions**.
-3. Run **Test and deploy portfolio** if a push has not already triggered it. The workflow tests and builds the app, then publishes the static site. Open the URL shown by the deployment.
-4. Pin the repository on your profile and add the deployment URL to the repository description. The [profile README draft](docs/github-profile.md) is ready to adapt to your account.
+1. Sign up at [formspree.io](https://formspree.io) with `npmrawat.048@gmail.com` and create a new form.
+2. Copy the endpoint (looks like `https://formspree.io/f/abcdwxyz`).
+3. In `assets/js/main.js`, set:
+   ```js
+   const FORM_ENDPOINT = "https://formspree.io/f/abcdwxyz";
+   ```
+4. Push the change. Submissions now arrive in your email.
+
+Until you do this, the form still works: it opens the visitor's email app with the message filled in and addressed to you.
+
+## Update content
+
+All text that changes often lives at the top of `assets/js/main.js`:
+
+| What | Where |
+|---|---|
+| Rotating hero phrases | `ROLES` |
+| Skills under each tab | `SKILLS` |
+| Project cards and case studies | `PROJECTS` (set `wide: true` for a full-width card) |
+| Experience timeline | `TIMELINE` |
+
+Hero text, stats, services and contact details are in `index.html`.
+
+### Before you publish, check
+
+- The stats strip (4+ years, 5 projects, 2 AI assistant frontends, 3 frameworks) matches your résumé.
+- `assets/Anupam_Rawat_Resume.pdf` is the version you want public. The site shows only +91 91055 67872, but the current PDF still lists both numbers. Swap in a PDF with one number before publishing.
+- Add your GitHub profile link to the hero and contact list once it's ready.
+- If you get real impact numbers (users, screens migrated, devices), add them to the project `summary` lines.
